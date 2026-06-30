@@ -54,14 +54,33 @@ export default async function DashboardPage() {
         ))}
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-xl font-semibold">Your communities</h2>
-          <div className="mt-4 space-y-3 text-sm text-slate-300">
-            {communities.length === 0 ? (
-              <p>No communities yet. Create your first one to get started.</p>
-            ) : (
-              communities.map((community) => (
+      {communities.length === 0 ? (
+        <div className="rounded-3xl border border-dashed border-slate-700 bg-slate-900 p-8">
+          <h2 className="text-xl font-semibold">You are almost there</h2>
+          <p className="mt-3 max-w-2xl text-sm text-slate-300">
+            Create your first community to unlock members, invites, applications, and tickets.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/dashboard/onboarding"
+              className="rounded-2xl bg-white px-4 py-3 font-semibold text-slate-950"
+            >
+              Start onboarding
+            </Link>
+            <Link
+              href="/dashboard/communities/new"
+              className="rounded-2xl border border-slate-700 px-4 py-3 font-semibold text-white"
+            >
+              Create community
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <div className="grid gap-6 xl:grid-cols-2">
+          <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="text-xl font-semibold">Your communities</h2>
+            <div className="mt-4 space-y-3 text-sm text-slate-300">
+              {communities.map((community) => (
                 <div key={community.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
                   <p className="font-semibold text-white">{community.name}</p>
                   <p className="mt-1 text-slate-400">/{community.slug}</p>
@@ -71,19 +90,19 @@ export default async function DashboardPage() {
                     {community._count.tickets} tickets
                   </p>
                 </div>
-              ))
-            )}
+              ))}
+            </div>
+          </div>
+          <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
+            <h2 className="text-xl font-semibold">Next steps</h2>
+            <div className="mt-4 space-y-4 text-sm text-slate-300">
+              <p>• Connect Discord OAuth</p>
+              <p>• Add member profiles</p>
+              <p>• Build application forms</p>
+            </div>
           </div>
         </div>
-        <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-xl font-semibold">Next steps</h2>
-          <div className="mt-4 space-y-4 text-sm text-slate-300">
-            <p>• Connect Discord OAuth</p>
-            <p>• Add member profiles</p>
-            <p>• Build application forms</p>
-          </div>
-        </div>
-      </div>
+      )}
     </main>
   );
 }
