@@ -1,21 +1,29 @@
 import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import { createCommunity } from '@/lib/communities';
 
-async function createCommunityAction(formData: FormData) {
-  'use server';
+export default async function NewCommunityPage() {
+  const session = await getServerSession(authOptions);
 
-  const name = String(formData.get('name') || '').trim();
-  const description = String(formData.get('description') || '').trim();
-
-  if (!name) {
-    return;
+  if (!session) {
+    redirect('/login');
   }
 
-  await createCommunity(name, description);
-  redirect('/dashboard');
-}
+  async function createCommunityAction(formData: FormData) {
+    'use server';
 
-export default function NewCommunityPage() {
+    const name = String(formData.get('name') || '').trim();
+    const description = String(formData.get('description') || '').trim();
+
+    if (!name || !session.user?.id) {
+      return;
+    }
+
+    await createCommunity(name, description, session.user.id);
+    redirect('/dashboard');
+  }
+
   return (
     <main className="max-w-2xl space-y-6">
       <div>
