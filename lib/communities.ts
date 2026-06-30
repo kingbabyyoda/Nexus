@@ -16,7 +16,11 @@ export async function getCommunities() {
   });
 }
 
-export async function createCommunity(name: string, description?: string) {
+export async function createCommunity(
+  name: string,
+  description?: string,
+  ownerUserId?: string,
+) {
   const slug = name
     .toLowerCase()
     .trim()
@@ -24,11 +28,23 @@ export async function createCommunity(name: string, description?: string) {
     .replace(/^-+|-+$/g, '')
     .slice(0, 50);
 
-  return prisma.community.create({
+  const community = await prisma.community.create({
     data: {
       name,
       slug: `${slug || 'community'}-${Date.now().toString().slice(-5)}`,
       description: description?.trim() || null,
     },
   });
+
+  if (ownerUserId) {
+    await prisma.member.create({
+      data: {
+        userId: ownerUserId,
+        communityId: community.id,
+        role: 'owner',
+      },
+    });
+  }
+
+  return community;
 }
