@@ -33,6 +33,9 @@ export default async function DashboardLayout({
             <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/members">
               Members
             </Link>
+            <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/roles">
+              Roles
+            </Link>
             <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/invites">
               Invites
             </Link>
