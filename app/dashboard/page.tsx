@@ -1,8 +1,13 @@
 import Link from 'next/link';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import { getCommunities } from '@/lib/communities';
 
 export default async function DashboardPage() {
-  const communities = await getCommunities();
+  const [session, communities] = await Promise.all([
+    getServerSession(authOptions),
+    getCommunities(),
+  ]);
 
   const totals = communities.reduce(
     (acc, community) => {
@@ -28,6 +33,9 @@ export default async function DashboardPage() {
         <div>
           <p className="text-sm uppercase tracking-[0.35em] text-slate-400">Overview</p>
           <h1 className="mt-2 text-4xl font-bold">Dashboard</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            {session?.user?.name || session?.user?.email || 'Your workspace'}
+          </p>
         </div>
         <Link
           href="/dashboard/communities/new"
