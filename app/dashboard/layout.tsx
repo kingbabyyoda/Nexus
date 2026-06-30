@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
+import { SignOutButton } from '@/components/sign-out-button';
 
 export default async function DashboardLayout({
   children,
@@ -41,12 +42,7 @@ export default async function DashboardLayout({
             <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="#">
               Tickets
             </a>
-            <a
-              className="block rounded-2xl px-4 py-3 hover:bg-slate-800"
-              href="/api/auth/signout"
-            >
-              Sign out
-            </a>
+            <SignOutButton />
           </nav>
         </aside>
         <section>{children}</section>
