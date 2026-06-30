@@ -7,9 +7,12 @@ export default function LoginPage() {
         <p className="mt-3 text-sm leading-6 text-slate-300">
           Discord login will be wired up next.
         </p>
-        <button className="mt-8 w-full rounded-2xl bg-white px-4 py-3 font-semibold text-slate-950">
+        <a
+          href="/api/auth/signin/discord"
+          className="mt-8 block w-full rounded-2xl bg-white px-4 py-3 text-center font-semibold text-slate-950"
+        >
           Continue with Discord
-        </button>
+        </a>
       </div>
     </main>
   );
