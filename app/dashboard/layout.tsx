@@ -15,8 +15,11 @@ export default function DashboardLayout({
             <a className="block rounded-2xl bg-slate-800 px-4 py-3 text-white" href="/dashboard">
               Dashboard
             </a>
-            <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="#">
+            <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/members">
               Members
+            </a>
+            <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/invites">
+              Invites
             </a>
             <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="#">
               Applications
