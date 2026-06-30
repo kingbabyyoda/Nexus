@@ -19,7 +19,7 @@ export default async function LoginPage() {
           Sign in with Discord to access your workspace.
         </p>
         <a
-          href="/api/auth/signin/discord"
+          href="/api/auth/signin/discord?callbackUrl=%2Fdashboard"
           className="mt-8 block w-full rounded-2xl bg-white px-4 py-3 text-center font-semibold text-slate-950"
         >
           Continue with Discord
