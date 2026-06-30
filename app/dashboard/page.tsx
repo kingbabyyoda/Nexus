@@ -1,16 +1,40 @@
-const stats = [
-  { label: 'Members', value: '128' },
-  { label: 'Applications', value: '14' },
-  { label: 'Tickets', value: '6' },
-  { label: 'Events', value: '3' },
-];
+import Link from 'next/link';
+import { getCommunities } from '@/lib/communities';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const communities = await getCommunities();
+
+  const totals = communities.reduce(
+    (acc, community) => {
+      acc.members += community._count.members;
+      acc.applications += community._count.applications;
+      acc.tickets += community._count.tickets;
+      acc.events += community._count.events;
+      return acc;
+    },
+    { members: 0, applications: 0, tickets: 0, events: 0 },
+  );
+
+  const stats = [
+    { label: 'Communities', value: String(communities.length) },
+    { label: 'Members', value: String(totals.members) },
+    { label: 'Applications', value: String(totals.applications) },
+    { label: 'Tickets', value: String(totals.tickets) },
+  ];
+
   return (
     <main className="space-y-6">
-      <div>
-        <p className="text-sm uppercase tracking-[0.35em] text-slate-400">Overview</p>
-        <h1 className="mt-2 text-4xl font-bold">Dashboard</h1>
+      <div className="flex items-end justify-between gap-4">
+        <div>
+          <p className="text-sm uppercase tracking-[0.35em] text-slate-400">Overview</p>
+          <h1 className="mt-2 text-4xl font-bold">Dashboard</h1>
+        </div>
+        <Link
+          href="/dashboard/communities/new"
+          className="rounded-2xl bg-white px-4 py-3 font-semibold text-slate-950"
+        >
+          Create community
+        </Link>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -24,11 +48,23 @@ export default function DashboardPage() {
 
       <div className="grid gap-6 xl:grid-cols-2">
         <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
-          <h2 className="text-xl font-semibold">Recent activity</h2>
-          <div className="mt-4 space-y-4 text-sm text-slate-300">
-            <p>• New application submitted by Ethan</p>
-            <p>• Ticket opened in #support</p>
-            <p>• Event scheduled for Friday night</p>
+          <h2 className="text-xl font-semibold">Your communities</h2>
+          <div className="mt-4 space-y-3 text-sm text-slate-300">
+            {communities.length === 0 ? (
+              <p>No communities yet. Create your first one to get started.</p>
+            ) : (
+              communities.map((community) => (
+                <div key={community.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
+                  <p className="font-semibold text-white">{community.name}</p>
+                  <p className="mt-1 text-slate-400">/{community.slug}</p>
+                  <p className="mt-2 text-slate-300">{community.description || 'No description yet.'}</p>
+                  <p className="mt-3 text-xs text-slate-500">
+                    {community._count.members} members · {community._count.applications} applications ·{' '}
+                    {community._count.tickets} tickets
+                  </p>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
