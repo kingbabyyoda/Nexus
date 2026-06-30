@@ -96,8 +96,8 @@ export default async function DashboardPage() {
           <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
             <h2 className="text-xl font-semibold">Next steps</h2>
             <div className="mt-4 space-y-4 text-sm text-slate-300">
+              <p>• Finish permissions and roles</p>
               <p>• Connect Discord OAuth</p>
-              <p>• Add member profiles</p>
               <p>• Build application forms</p>
             </div>
           </div>
