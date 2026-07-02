@@ -1,9 +1,25 @@
-export default function InvitesPage() {
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import { requireRole } from '@/lib/access';
+
+export default async function InvitesPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  await requireRole(session.user?.id, 'admin');
+
   return (
     <main className="max-w-3xl space-y-6">
       <div>
         <p className="text-sm uppercase tracking-[0.35em] text-slate-400">Invites</p>
         <h1 className="mt-2 text-4xl font-bold">Invite members</h1>
+        <p className="mt-3 text-sm text-slate-400">
+          Only owners and admins can manage invite links.
+        </p>
       </div>
 
       <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
