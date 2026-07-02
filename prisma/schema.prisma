@@ -17,6 +17,7 @@ model User {
   accounts  Account[]
   sessions  Session[]
   members   Member[]
+  inviteAcceptances Invite[] @relation("InviteAcceptedBy")
 }
 
 model Community {
@@ -30,6 +31,7 @@ model Community {
   applications Application[]
   tickets     Ticket[]
   events      Event[]
+  invites     Invite[]
 }
 
 model Member {
@@ -42,6 +44,21 @@ model Member {
   community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
   @@unique([userId, communityId])
+}
+
+model Invite {
+  id              String     @id @default(cuid())
+  communityId     String
+  email           String?
+  role            String     @default("member")
+  token           String     @unique
+  status          String     @default("pending")
+  expiresAt       DateTime?
+  acceptedAt      DateTime?
+  acceptedByUserId String?
+  createdAt       DateTime   @default(now())
+  community       Community  @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  acceptedBy      User?      @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
 }
 
 model Application {
