@@ -46,12 +46,12 @@ export default async function DashboardLayout({
             <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/invites">
               Invites
             </Link>
-            <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="#">
+            <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/applications">
               Applications
-            </a>
-            <a className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="#">
+            </Link>
+            <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/tickets">
               Tickets
-            </a>
+            </Link>
             <SignOutButton />
           </nav>
         </aside>
