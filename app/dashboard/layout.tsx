@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/lib/auth';
 import { SignOutButton } from '@/components/sign-out-button';
+import { getUserHighestRole } from '@/lib/access';
+import { roleLabel } from '@/lib/permissions';
 
 export default async function DashboardLayout({
   children,
@@ -15,6 +17,8 @@ export default async function DashboardLayout({
     redirect('/login');
   }
 
+  const highestRole = await getUserHighestRole(session.user?.id);
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100">
       <div className="mx-auto grid min-h-screen max-w-7xl gap-6 p-6 lg:grid-cols-[260px_1fr]">
@@ -24,6 +28,9 @@ export default async function DashboardLayout({
             <h2 className="mt-2 text-2xl font-bold">Workspace</h2>
             <p className="mt-2 text-sm text-slate-400">
               Signed in as {session.user?.name || session.user?.email || 'member'}
+            </p>
+            <p className="mt-2 text-xs uppercase tracking-[0.2em] text-slate-500">
+              {highestRole ? roleLabel(highestRole) : 'No role yet'}
             </p>
           </div>
           <nav className="mt-8 space-y-2 text-sm text-slate-300">
