@@ -19,6 +19,21 @@ export function buildQuestionsFromInputs(inputs: Array<{ label: string; type: Ap
     }));
 }
 
+export async function getApplicationFormById(formId: string) {
+  return prisma.applicationForm.findUnique({
+    where: { id: formId },
+    include: {
+      community: true,
+      applications: {
+        orderBy: { createdAt: 'desc' },
+        include: {
+          applicant: true,
+        },
+      },
+    },
+  });
+}
+
 export async function createApplicationForm(input: {
   communityId: string;
   title: string;
@@ -33,6 +48,23 @@ export async function createApplicationForm(input: {
       description: input.description || null,
       questions: input.questions,
       status: input.status ?? 'draft',
+    },
+  });
+}
+
+export async function submitApplication(input: {
+  communityId: string;
+  formId: string;
+  applicantUserId: string;
+  answers: Record<string, string | string[] | boolean>;
+}) {
+  return prisma.application.create({
+    data: {
+      communityId: input.communityId,
+      formId: input.formId,
+      applicantUserId: input.applicantUserId,
+      answers: input.answers,
+      status: 'pending',
     },
   });
 }
