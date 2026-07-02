@@ -1,6 +1,18 @@
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { requireRole } from '@/lib/access';
 
 export default async function MembersPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  await requireRole(session.user?.id, 'moderator');
+
   const members = await prisma.member.findMany({
     orderBy: { joinedAt: 'desc' },
     include: {
@@ -14,6 +26,9 @@ export default async function MembersPage() {
       <div>
         <p className="text-sm uppercase tracking-[0.35em] text-slate-400">Members</p>
         <h1 className="mt-2 text-4xl font-bold">Member management</h1>
+        <p className="mt-3 text-sm text-slate-400">
+          Moderators and above can manage community members.
+        </p>
       </div>
 
       <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
