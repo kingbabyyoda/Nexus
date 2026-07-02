@@ -82,8 +82,18 @@ export default async function DashboardPage() {
             <div className="mt-4 space-y-3 text-sm text-slate-300">
               {communities.map((community) => (
                 <div key={community.id} className="rounded-2xl border border-slate-800 bg-slate-950 p-4">
-                  <p className="font-semibold text-white">{community.name}</p>
-                  <p className="mt-1 text-slate-400">/{community.slug}</p>
+                  <div className="flex items-start justify-between gap-4">
+                    <div>
+                      <p className="font-semibold text-white">{community.name}</p>
+                      <p className="mt-1 text-slate-400">/{community.slug}</p>
+                    </div>
+                    <Link
+                      href={`/dashboard/communities/${community.id}/settings`}
+                      className="rounded-full border border-slate-700 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-400"
+                    >
+                      Settings
+                    </Link>
+                  </div>
                   <p className="mt-2 text-slate-300">{community.description || 'No description yet.'}</p>
                   <p className="mt-3 text-xs text-slate-500">
                     {community._count.members} members · {community._count.applications} applications ·{' '}
