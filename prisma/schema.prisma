@@ -23,18 +23,19 @@ model User {
 }
 
 model Community {
-  id             String           @id @default(cuid())
-  name           String
-  slug           String           @unique
-  description    String?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  members        Member[]
+  id               String              @id @default(cuid())
+  name             String
+  slug             String              @unique
+  description      String?
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
+  members          Member[]
   applicationForms ApplicationForm[]
-  applications   Application[]
-  tickets        Ticket[]
-  events         Event[]
-  invites        Invite[]
+  applications     Application[]
+  tickets          Ticket[]
+  events           Event[]
+  invites          Invite[]
+  discordIntegration DiscordIntegration?
 }
 
 model Member {
@@ -114,6 +115,20 @@ model Event {
   startsAt    DateTime
   createdAt   DateTime  @default(now())
   community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+}
+
+model DiscordIntegration {
+  id                String    @id @default(cuid())
+  communityId       String    @unique
+  guildId           String    @unique
+  guildName         String
+  botConnected      Boolean   @default(false)
+  memberSyncEnabled Boolean   @default(true)
+  roleSyncEnabled   Boolean   @default(true)
+  lastSyncedAt      DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  community         Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 }
 
 model Account {
