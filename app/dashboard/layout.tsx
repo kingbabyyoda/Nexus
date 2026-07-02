@@ -52,6 +52,9 @@ export default async function DashboardLayout({
             <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/tickets">
               Tickets
             </Link>
+            <Link className="block rounded-2xl px-4 py-3 hover:bg-slate-800" href="/dashboard/discord">
+              Discord
+            </Link>
             <SignOutButton />
           </nav>
         </aside>
