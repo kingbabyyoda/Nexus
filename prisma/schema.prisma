@@ -8,30 +8,33 @@ datasource db {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  email     String?    @unique
-  name      String?
-  image     String?
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  accounts  Account[]
-  sessions  Session[]
-  members   Member[]
-  inviteAcceptances Invite[] @relation("InviteAcceptedBy")
+  id                String     @id @default(cuid())
+  email             String?    @unique
+  name              String?
+  image             String?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  accounts          Account[]
+  sessions          Session[]
+  members           Member[]
+  inviteAcceptances  Invite[]   @relation("InviteAcceptedBy")
+  applicationsSubmitted Application[] @relation("ApplicationSubmittedBy")
+  applicationsReviewed   Application[] @relation("ApplicationReviewedBy")
 }
 
 model Community {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  members     Member[]
-  applications Application[]
-  tickets     Ticket[]
-  events      Event[]
-  invites     Invite[]
+  id             String           @id @default(cuid())
+  name           String
+  slug           String           @unique
+  description    String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  members        Member[]
+  applicationForms ApplicationForm[]
+  applications   Application[]
+  tickets        Ticket[]
+  events         Event[]
+  invites        Invite[]
 }
 
 model Member {
@@ -47,28 +50,47 @@ model Member {
 }
 
 model Invite {
-  id              String     @id @default(cuid())
-  communityId     String
-  email           String?
-  role            String     @default("member")
-  token           String     @unique
-  status          String     @default("pending")
-  expiresAt       DateTime?
-  acceptedAt      DateTime?
+  id               String     @id @default(cuid())
+  communityId      String
+  email            String?
+  role             String     @default("member")
+  token            String     @unique
+  status           String     @default("pending")
+  expiresAt        DateTime?
+  acceptedAt       DateTime?
   acceptedByUserId String?
-  createdAt       DateTime   @default(now())
-  community       Community  @relation(fields: [communityId], references: [id], onDelete: Cascade)
-  acceptedBy      User?      @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
+  createdAt        DateTime   @default(now())
+  community        Community  @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  acceptedBy       User?      @relation("InviteAcceptedBy", fields: [acceptedByUserId], references: [id], onDelete: SetNull)
 }
 
-model Application {
+model ApplicationForm {
   id          String    @id @default(cuid())
   communityId String
   title       String
-  status      String    @default("pending")
-  answers     Json
+  description String?
+  questions   Json
+  status      String    @default("draft")
   createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  applications Application[]
+}
+
+model Application {
+  id               String            @id @default(cuid())
+  communityId      String
+  formId           String
+  applicantUserId  String?
+  answers          Json
+  status           String            @default("pending")
+  reviewedByUserId String?
+  reviewedAt       DateTime?
+  createdAt        DateTime          @default(now())
+  community        Community         @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  form             ApplicationForm   @relation(fields: [formId], references: [id], onDelete: Cascade)
+  applicant        User?             @relation("ApplicationSubmittedBy", fields: [applicantUserId], references: [id], onDelete: SetNull)
+  reviewedBy       User?             @relation("ApplicationReviewedBy", fields: [reviewedByUserId], references: [id], onDelete: SetNull)
 }
 
 model Ticket {
