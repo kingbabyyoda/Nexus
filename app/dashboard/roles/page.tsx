@@ -1,6 +1,18 @@
+import { redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/auth';
+import { requireRole } from '@/lib/access';
 import { COMMUNITY_ROLES, canManageCommunity, canModerateCommunity, roleLabel } from '@/lib/permissions';
 
-export default function RolesPage() {
+export default async function RolesPage() {
+  const session = await getServerSession(authOptions);
+
+  if (!session) {
+    redirect('/login');
+  }
+
+  await requireRole(session.user?.id, 'admin');
+
   return (
     <main className="space-y-6">
       <div>
